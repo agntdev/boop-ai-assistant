@@ -1,20 +1,10 @@
 [
   {
-    "name": "Create Reminder",
+    "name": "invalid reminder time is explained",
     "steps": [
-      {
-        "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Schedule a proactive notification"
-            }
-          }
-        ],
-        "send": {
-          "callback": "reminder:create"
-        }
-      }
+      { "send": { "callback": "reminder:create" }, "expect": [{ "method": "sendMessage", "payload": { "text": "What should I remind you about?" } }] },
+      { "send": { "text": "Call Sam" }, "expect": [{ "method": "sendMessage", "payload": { "text": "When should I send it? Use UTC time like 2026-08-01 14:30." } }] },
+      { "send": { "text": "tomorrow" }, "expect": [{ "method": "sendMessage", "payload": { "text": "I couldn’t read that time. Use UTC time like 2026-08-01 14:30." } }] }
     ]
   }
 ]

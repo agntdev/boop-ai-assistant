@@ -1,5 +1,6 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
+import { resetFlow } from "../domain.js";
 import { mainMenuKeyboard } from "../toolkit/index.js";
 
 // The /start handler renders the bot's MAIN MENU — the primary way users operate
@@ -9,9 +10,10 @@ import { mainMenuKeyboard } from "../toolkit/index.js";
 // file to add a feature. Send ONE message — no placeholder line above the menu.
 const composer = new Composer<Ctx>();
 
-const WELCOME = "👋 Welcome! Tap a button below to get started.";
+const WELCOME = "👋 I’m Boop. Ask me anything, save a thought, or set a reminder.";
 
 composer.command("start", async (ctx) => {
+  resetFlow(ctx);
   await ctx.reply(WELCOME, { reply_markup: mainMenuKeyboard() });
 });
 
