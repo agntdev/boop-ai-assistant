@@ -1,15 +1,22 @@
 import { Composer } from "grammy";
+import type { Ctx } from "../bot.js";
+import { state } from "../domain.js";
+import { inlineButton, inlineKeyboard, registerMainMenuItem } from "../toolkit/index.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
+registerMainMenuItem({ label: "Model", data: "model:show", order: 40 });
+const composer = new Composer<Ctx>();
+const modelKeyboard = inlineKeyboard([[inlineButton("Balanced", "model:set:balanced"), inlineButton("Focused", "model:set:focused")], [inlineButton("⬅️ Menu", "menu:main")]]);
 
-const composer = new Composer();
+composer.callbackQuery("model:show", async (ctx) => {
+  await ctx.answerCallbackQuery();
+  await ctx.editMessageText(`You’re using ${state(ctx).conversation!.model}. Pick a style any time.`, { reply_markup: modelKeyboard });
+});
 
-composer.command("model", async (ctx) => {
-  await ctx.reply("Show current AI model and allow switching");
+composer.callbackQuery(/^model:set:(balanced|focused)$/, async (ctx) => {
+  await ctx.answerCallbackQuery();
+  const model = ctx.match[1] === "focused" ? "Boop Focused" : "Boop Balanced";
+  state(ctx).conversation!.model = model;
+  await ctx.editMessageText(`You’re now using ${model}.`, { reply_markup: modelKeyboard });
 });
 
 export default composer;

@@ -1,20 +1,9 @@
 [
   {
-    "name": "/model",
+    "name": "switch model from the menu",
     "steps": [
-      {
-        "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Show current AI model and allow switching"
-            }
-          }
-        ],
-        "send": {
-          "text": "/model"
-        }
-      }
+      { "send": { "callback": "model:show" }, "expect": [{ "method": "editMessageText", "payload": { "text": "You’re using Boop Balanced. Pick a style any time." } }] },
+      { "send": { "callback": "model:set:focused" }, "expect": [{ "method": "editMessageText", "payload": { "text": "You’re now using Boop Focused." } }] }
     ]
   }
 ]

@@ -1,20 +1,8 @@
 [
   {
-    "name": "List Memories",
+    "name": "list memories shows a helpful empty state",
     "steps": [
-      {
-        "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "View stored memories"
-            }
-          }
-        ],
-        "send": {
-          "callback": "memory:list"
-        }
-      }
+      { "send": { "callback": "memory:list" }, "expect": [{ "method": "sendMessage", "payload": { "text": "No memories yet — tap Remember to add one." } }] }
     ]
   }
 ]

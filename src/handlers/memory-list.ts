@@ -1,17 +1,27 @@
 import { Composer } from "grammy";
+import type { Ctx } from "../bot.js";
+import { state } from "../domain.js";
+import { inlineButton, inlineKeyboard, registerMainMenuItem } from "../toolkit/index.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
-// Menu: wire this into /start via registerMainMenuItem({ label: "List Memories", data: "memory:list" }) if the toolkit exposes it.
+registerMainMenuItem({ label: "📚 Memories", data: "memory:list", order: 20 });
+const composer = new Composer<Ctx>();
 
-const composer = new Composer();
+function keyboard() { return inlineKeyboard([[inlineButton("Private", "memory:list:private"), inlineButton("Shared", "memory:list:shared")], [inlineButton("⬅️ Menu", "menu:main")]]); }
+function text(ctx: Ctx, privacy?: "private" | "shared") {
+  const items = state(ctx).memories!.filter((item) => !privacy || item.privacy === privacy);
+  if (!items.length) return privacy ? `No ${privacy} memories yet — tap Remember to add one.` : "No memories yet — tap Remember to add one.";
+  return `${privacy ? `${privacy[0].toUpperCase()}${privacy.slice(1)} ` : ""}memories:\n\n${items.map((item, index) => `${index + 1}. ${item.content}`).join("\n")}`;
+}
 
 composer.callbackQuery("memory:list", async (ctx) => {
   await ctx.answerCallbackQuery();
-  await ctx.reply("View stored memories");
+  await ctx.reply(text(ctx), { reply_markup: keyboard() });
+});
+
+composer.callbackQuery(/^memory:list:(private|shared)$/, async (ctx) => {
+  await ctx.answerCallbackQuery();
+  const privacy = ctx.match[1] as "private" | "shared";
+  await ctx.editMessageText(text(ctx, privacy), { reply_markup: keyboard() });
 });
 
 export default composer;

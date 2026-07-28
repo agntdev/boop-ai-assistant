@@ -1,20 +1,8 @@
 [
   {
-    "name": "/new",
+    "name": "start a new conversation from the menu",
     "steps": [
-      {
-        "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Clear current conversation context"
-            }
-          }
-        ],
-        "send": {
-          "text": "/new"
-        }
-      }
+      { "send": { "callback": "conversation:new" }, "expect": [{ "method": "editMessageText", "payload": { "text": "Starting fresh. What would you like to explore?" } }] }
     ]
   }
 ]

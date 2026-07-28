@@ -1,0 +1,9 @@
+[
+  {
+    "name": "safe mode requires approval for a risky request",
+    "steps": [
+      { "send": { "text": "transfer money to my friend" }, "expect": [{ "method": "sendMessage", "payload": { "text": "This could have a real-world impact. Do you want me to continue?" } }] },
+      { "send": { "callback": "risk:deny" }, "expect": [{ "method": "editMessageText", "payload": { "text": "Okay — I won’t act on that request." } }] }
+    ]
+  }
+]

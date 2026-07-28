@@ -1,0 +1,28 @@
+[
+  {
+    "name": "shared memories are stored and filtered separately",
+    "steps": [
+      { "send": { "callback": "memory:save" }, "expect": [{ "method": "sendMessage", "payload": { "text": "What would you like me to remember? Send one short note." } }] },
+      { "send": { "text": "Team launch notes" }, "expect": [{ "method": "sendMessage", "payload": { "text": "Who can see it?" } }] },
+      { "send": { "callback": "memory:shared" }, "expect": [{ "method": "editMessageText", "payload": { "text": "Got it — I saved that as a shared memory." } }] },
+      { "send": { "callback": "memory:list:private" }, "expect": [{ "method": "editMessageText", "payload": { "text": "No private memories yet — tap Remember to add one." } }] },
+      { "send": { "callback": "memory:list:shared" }, "expect": [{ "method": "editMessageText", "payload": { "text": "Shared memories:\n\n1. Team launch notes" } }] }
+    ]
+  },
+  {
+    "name": "schedule a future reminder",
+    "steps": [
+      { "send": { "callback": "reminder:create" }, "expect": [{ "method": "sendMessage", "payload": { "text": "What should I remind you about?" } }] },
+      { "send": { "text": "Renew passport" }, "expect": [{ "method": "sendMessage", "payload": { "text": "When should I send it? Use UTC time like 2026-08-01 14:30." } }] },
+      { "send": { "text": "2099-01-01 10:00" }, "expect": [{ "method": "sendMessage", "payload": { "text": "Which timezone should I use? Send an IANA name like Europe/London, or tap nothing and send UTC." } }] },
+      { "send": { "text": "UTC" }, "expect": [{ "method": "sendMessage", "payload": { "text": "All set — I’ll remind you about “Renew passport” at 2099-01-01 10:00 UTC." } }] }
+    ]
+  },
+  {
+    "name": "safe mode processes a request only after approval",
+    "steps": [
+      { "send": { "text": "delete this account" }, "expect": [{ "method": "sendMessage", "payload": { "text": "This could have a real-world impact. Do you want me to continue?" } }] },
+      { "send": { "callback": "risk:approve" }, "expect": [{ "method": "editMessageText", "payload": { "text": "Thanks — I’ll answer that request now." } }] }
+    ]
+  }
+]

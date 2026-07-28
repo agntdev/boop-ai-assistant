@@ -1,20 +1,10 @@
 [
   {
-    "name": "Remember",
+    "name": "save a private memory",
     "steps": [
-      {
-        "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Save a memory with privacy selection"
-            }
-          }
-        ],
-        "send": {
-          "callback": "memory:save"
-        }
-      }
+      { "send": { "callback": "memory:save" }, "expect": [{ "method": "sendMessage", "payload": { "text": "What would you like me to remember? Send one short note." } }] },
+      { "send": { "text": "Bring an umbrella" }, "expect": [{ "method": "sendMessage", "payload": { "text": "Who can see it?" } }] },
+      { "send": { "callback": "memory:private" }, "expect": [{ "method": "editMessageText", "payload": { "text": "Got it — I saved that as a private memory." } }] }
     ]
   }
 ]

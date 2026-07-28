@@ -1,20 +1,10 @@
 [
   {
-    "name": "/system",
+    "name": "set system instructions from the menu",
     "steps": [
-      {
-        "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "View/set/reset system prompt"
-            }
-          }
-        ],
-        "send": {
-          "text": "/system"
-        }
-      }
+      { "send": { "callback": "system:show" }, "expect": [{ "method": "editMessageText", "payload": { "text": "My current instructions are:\n\nBe helpful, accurate, and concise." } }] },
+      { "send": { "callback": "system:set" }, "expect": [{ "method": "sendMessage", "payload": { "text": "Send the instructions you’d like me to follow." } }] },
+      { "send": { "text": "Use short answers." }, "expect": [{ "method": "sendMessage", "payload": { "text": "Got it — I’ll use those instructions in this chat." } }] }
     ]
   }
 ]
